@@ -89,4 +89,21 @@ describe('Stream tests', function () {
     assert.deepEqual(charStream.tail().toArray(), ['B', 'Z', 'R', 'A', 'G'])
     assert.deepEqual(emptyStream.tail().toArray(), [])
   })
+
+  it('should concat two streams', function () {
+    assert.deepEqual(
+      numberStream.concat(intRange(6, (x) => x <= 10)).toArray(),
+      [1, 2, 3, 4, 5, 6, 7, 8, 9, 10]
+    )
+
+    assert.deepEqual(
+      charStream.concat(fromArray(['K', 'J', 'M', 'L'])).toArray(),
+      ['C', 'B', 'Z', 'R', 'A', 'G', 'K', 'J', 'M', 'L']
+    )
+
+    assert.deepEqual(
+      emptyStream.concat(emptyStream).toArray(),
+      []
+    )
+  })
 })

@@ -9,6 +9,7 @@ export interface Stream<T> {
   last: () => T | undefined
   init: () => Stream<T>
   tail: () => Stream<T>
+  concat: (other: Stream<T>) => Stream<T>
 }
 
 export function intRange (
@@ -160,6 +161,37 @@ class IterableStream<T> implements Stream<T> {
     }
 
     return new IterableStream(generator)
+  }
+
+  concat (other: Stream<T>): Stream<T> {
+    const iteratorFnOne = this.iteratorFn
+    const iteratorFnTwo = (other as IterableStream<T>).iteratorFn
+
+    function* generate (): Iterator<T> {
+      let iterator = iteratorFnOne()
+      let next = iterator.next()
+
+      while (next !== undefined && next.done === false) {
+        const value = next.value
+
+        yield value
+
+        next = iterator.next()
+      }
+
+      iterator = iteratorFnTwo()
+      next = iterator.next()
+
+      while (next !== undefined && next.done === false) {
+        const value = next.value
+
+        yield value
+
+        next = iterator.next()
+      }
+    }
+
+    return new IterableStream(generate)
   }
 }
 
