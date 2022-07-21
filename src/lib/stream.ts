@@ -12,6 +12,7 @@ export interface Stream<T> {
   concat: (other: Stream<T>) => Stream<T>
   append: (item: T) => Stream<T>
   inits: () => Stream<Stream<T>>
+  tails: () => Stream<Stream<T>>
 }
 
 export function intRange (
@@ -235,6 +236,30 @@ class IterableStream<T> implements Stream<T> {
       }
 
       yield stream
+    }
+
+    return new IterableStream(generate)
+  }
+
+  tails (): Stream<Stream<T>> {
+    const iteratorFn = this.iteratorFn
+
+    // eslint-disable-next-line @typescript-eslint/no-this-alias
+    const self = this
+
+    function* generate (): Iterator<Stream<T>> {
+      const iterator = iteratorFn()
+      let stream: Stream<T> = self
+      let next = iterator.next()
+
+      yield stream
+
+      while (next !== undefined && next.done === false) {
+        next = iterator.next()
+        stream = stream.tail()
+
+        yield stream
+      }
     }
 
     return new IterableStream(generate)

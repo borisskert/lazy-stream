@@ -129,4 +129,21 @@ describe('Stream tests', function () {
       [[]]
     )
   })
+
+  it('should provide tails', function () {
+    assert.deepEqual(
+      numberStream.tails().map(s => s.toArray()).toArray(),
+      [[1, 2, 3, 4, 5], [2, 3, 4, 5], [3, 4, 5], [4, 5], [5], []]
+    )
+
+    assert.deepEqual(
+      charStream.tails().map(s => s.toArray()).toArray(),
+      [['C', 'B', 'Z', 'R', 'A', 'G'], ['B', 'Z', 'R', 'A', 'G'], ['Z', 'R', 'A', 'G'], ['R', 'A', 'G'], ['A', 'G'], ['G'], []]
+    )
+
+    assert.deepEqual(
+      emptyStream.tails().map(s => s.toArray()).toArray(),
+      [[]]
+    )
+  })
 })
