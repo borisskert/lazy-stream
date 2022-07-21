@@ -65,4 +65,10 @@ describe('Stream tests', function () {
     assert.deepEqual(charStream.isEmpty(), false)
     assert.deepEqual(emptyStream.isEmpty(), true)
   })
+
+  it('should provide head', function () {
+    assert.deepEqual(numberStream.head(), 1)
+    assert.deepEqual(charStream.head(), 'C')
+    assert.isUndefined(emptyStream.head())
+  })
 })

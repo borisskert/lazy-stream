@@ -5,6 +5,7 @@ export interface Stream<T> {
   flatMap: <U>(mapperFn: (value: T, index: number) => U[]) => Stream<U>
   sorted: (compareFn?: (a: T, b: T) => number) => Stream<T>
   isEmpty: () => boolean
+  head: () => T | undefined
 }
 
 export function intRange (
@@ -90,6 +91,17 @@ class IterableStream<T> implements Stream<T> {
     const next = iterator.next()
 
     return !(next !== undefined && next.done === false)
+  }
+
+  head (): T | undefined {
+    const iterator = this.iteratorFn()
+    const next = iterator.next()
+
+    if (next !== undefined && next.done === false) {
+      return next.value
+    }
+
+    return undefined
   }
 }
 
