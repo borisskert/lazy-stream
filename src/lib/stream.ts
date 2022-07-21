@@ -2,6 +2,7 @@ export interface Stream<T> {
   toArray: () => T[]
   filter: (predicate: (value: T, index: number) => boolean) => Stream<T>
   map: <U>(mapperFn: (value: T, index: number) => U) => Stream<U>
+  flatMap: <U>(mapperFn: (value: T, index: number) => U[]) => Stream<U>
 }
 
 export function intRange (
@@ -54,6 +55,11 @@ class IterableStream<T> implements Stream<T> {
 
   map<U> (mapperFn: (value: T, index: number) => U): Stream<U> {
     return new Mapping(mapperFn, this).toStream()
+  }
+
+  flatMap<U> (mapperFn: (value: T, index: number) => U[]): Stream<U> {
+    const mapped = new Mapping(mapperFn, this).toStream() as IterableStream<U[]>
+    return new Flattening(mapped).toStream()
   }
 
   * asIterator (): Iterator<T> {
@@ -125,5 +131,29 @@ class Mapping<T, U> {
 
   public toStream (): Stream<U> {
     return new IterableStream(() => this.asIterator())
+  }
+}
+
+class Flattening<T> {
+  constructor (
+    private readonly stream: IterableStream<T[]>
+  ) {
+  }
+
+  private* flatten (): Iterator<T> {
+    const iterator = this.stream.asIterator()
+    let next = iterator.next()
+
+    while (next !== undefined && next.done === false) {
+      const value = next.value
+
+      yield* value
+
+      next = iterator.next()
+    }
+  }
+
+  public toStream (): Stream<T> {
+    return new IterableStream(() => this.flatten())
   }
 }

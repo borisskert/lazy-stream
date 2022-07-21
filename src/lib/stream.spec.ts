@@ -25,4 +25,16 @@ describe('Stream tests', function () {
     assert.deepEqual(numberStream.map((x: number) => x * 2).toArray(), [2, 4, 6, 8, 10])
     assert.deepEqual(charStream.map((c: string) => c + c).toArray(), ['CC', 'BB', 'ZZ', 'RR', 'AA', 'GG'])
   })
+
+  it('should flatmap a stream', function () {
+    assert.deepEqual(
+      numberStream.flatMap((x) => [x, x]).toArray(),
+      [1, 1, 2, 2, 3, 3, 4, 4, 5, 5]
+    )
+
+    assert.deepEqual(
+      charStream.flatMap((c) => [c, c]).toArray(),
+      ['C', 'C', 'B', 'B', 'Z', 'Z', 'R', 'R', 'A', 'A', 'G', 'G']
+    )
+  })
 })
