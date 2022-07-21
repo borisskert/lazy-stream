@@ -71,4 +71,10 @@ describe('Stream tests', function () {
     assert.deepEqual(charStream.head(), 'C')
     assert.isUndefined(emptyStream.head())
   })
+
+  it('should provide last', function () {
+    assert.deepEqual(numberStream.last(), 5)
+    assert.deepEqual(charStream.last(), 'G')
+    assert.isUndefined(emptyStream.last())
+  })
 })

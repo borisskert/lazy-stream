@@ -6,6 +6,7 @@ export interface Stream<T> {
   sorted: (compareFn?: (a: T, b: T) => number) => Stream<T>
   isEmpty: () => boolean
   head: () => T | undefined
+  last: () => T | undefined
 }
 
 export function intRange (
@@ -102,6 +103,19 @@ class IterableStream<T> implements Stream<T> {
     }
 
     return undefined
+  }
+
+  last (): T | undefined {
+    const iterator = this.iteratorFn()
+    let next = iterator.next()
+    let value: T | undefined
+
+    while (next !== undefined && next.done === false) {
+      value = next.value
+      next = iterator.next()
+    }
+
+    return value
   }
 }
 
