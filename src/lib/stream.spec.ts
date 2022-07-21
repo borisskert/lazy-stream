@@ -1,5 +1,5 @@
 import { assert } from 'chai'
-import { fromArray, intRange, Stream } from './stream'
+import { empty, fromArray, intRange, Stream } from './stream'
 
 function descendingNumbers (a: number, b: number): number {
   return b - a
@@ -20,6 +20,7 @@ function ascendingStrings (a: string, b: string): number {
 describe('Stream tests', function () {
   let numberStream: Stream<number>
   let charStream: Stream<string>
+  const emptyStream: Stream<number> = empty()
 
   // not using beforeEach to test immutability
   before(() => {
@@ -57,5 +58,11 @@ describe('Stream tests', function () {
   it('should sort elements', function () {
     assert.deepEqual(numberStream.sorted(descendingNumbers).toArray(), [5, 4, 3, 2, 1])
     assert.deepEqual(charStream.sorted((a, b) => ascendingStrings(a, b) * -1).toArray(), ['Z', 'R', 'G', 'C', 'B', 'A'])
+  })
+
+  it('should determine if a stream is empty', function () {
+    assert.deepEqual(numberStream.isEmpty(), false)
+    assert.deepEqual(charStream.isEmpty(), false)
+    assert.deepEqual(emptyStream.isEmpty(), true)
   })
 })

@@ -4,6 +4,7 @@ export interface Stream<T> {
   map: <U>(mapperFn: (value: T, index: number) => U) => Stream<U>
   flatMap: <U>(mapperFn: (value: T, index: number) => U[]) => Stream<U>
   sorted: (compareFn?: (a: T, b: T) => number) => Stream<T>
+  isEmpty: () => boolean
 }
 
 export function intRange (
@@ -31,6 +32,10 @@ export function fromArray<T> (items: T[]): Stream<T> {
   }
 
   return new IterableStream(generate)
+}
+
+export function empty<T> (): Stream<T> {
+  return fromArray<T>([])
 }
 
 class IterableStream<T> implements Stream<T> {
@@ -78,6 +83,13 @@ class IterableStream<T> implements Stream<T> {
 
   sorted (compareFn: ((a: T, b: T) => number) | undefined): Stream<T> {
     return new Sorting(compareFn, this).toStream()
+  }
+
+  isEmpty (): boolean {
+    const iterator = this.iteratorFn()
+    const next = iterator.next()
+
+    return !(next !== undefined && next.done === false)
   }
 }
 
