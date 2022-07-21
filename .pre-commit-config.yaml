@@ -1,0 +1,9 @@
+---
+repos:
+  - repo: local
+    hooks:
+      - id: stylecheck
+        name: stylecheck
+        entry: npm run lint
+        language: node
+        files: \.ts$

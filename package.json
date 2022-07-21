@@ -2,10 +2,23 @@
   "name": "lazy-stream",
   "version": "0.1.0",
   "description": "Lazy stream API for TypeScript/JavaScript",
+  "repository": "https://github.com/borisskert/lazy-stream",
   "main": "",
   "scripts": {
-    "test": "echo \"Error: no test specified\" && exit 1"
+    "build": "tsc --build",
+    "test": "env TS_NODE_COMPILER_OPTIONS='{\"module\": \"commonjs\" }' mocha -r ts-node/register 'test/**/*.ts'",
+    "lint": "eslint **/*.ts",
+    "stylefix": "eslint **/*.ts --fix"
   },
   "author": "borisskert",
-  "license": "MIT"
+  "license": "MIT",
+  "devDependencies": {
+    "@types/chai": "^4.3.1",
+    "@types/mocha": "^9.1.1",
+    "chai": "^4.3.6",
+    "eslint-config-standard-with-typescript": "^21.0.1",
+    "mocha": "^10.0.0",
+    "ts-node": "^10.7.0",
+    "typescript": "4.2"
+  }
 }
