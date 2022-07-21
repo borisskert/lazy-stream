@@ -6,7 +6,7 @@
   "main": "",
   "scripts": {
     "build": "tsc --build",
-    "test": "env TS_NODE_COMPILER_OPTIONS='{\"module\": \"commonjs\" }' mocha -r ts-node/register 'test/**/*.ts'",
+    "test": "env TS_NODE_COMPILER_OPTIONS='{\"module\": \"commonjs\" }' mocha -r ts-node/register 'src/**/*.spec.ts'",
     "lint": "eslint **/*.ts",
     "stylefix": "eslint **/*.ts --fix"
   },
