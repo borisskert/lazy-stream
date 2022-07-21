@@ -146,4 +146,11 @@ describe('Stream tests', function () {
       [[]]
     )
   })
+
+  it('should reduce items', function () {
+    assert.deepEqual([1, 2, 3, 4, 5].reduce((a, b) => a + b), 15)
+    assert.deepEqual(numberStream.reduce((a, b) => a + b), 15)
+    assert.deepEqual(charStream.reduce((a, b) => a + b), 'CBZRAG')
+    assert.isUndefined(emptyStream.reduce((a, b) => a + b))
+  })
 })
