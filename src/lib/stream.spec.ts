@@ -106,4 +106,10 @@ describe('Stream tests', function () {
       []
     )
   })
+
+  it('should append item', function () {
+    assert.deepEqual(numberStream.append(6).toArray(), [1, 2, 3, 4, 5, 6])
+    assert.deepEqual(charStream.append('M').toArray(), ['C', 'B', 'Z', 'R', 'A', 'G', 'M'])
+    assert.deepEqual(emptyStream.append(10).toArray(), [10])
+  })
 })
