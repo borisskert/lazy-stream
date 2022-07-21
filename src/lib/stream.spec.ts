@@ -112,4 +112,21 @@ describe('Stream tests', function () {
     assert.deepEqual(charStream.append('M').toArray(), ['C', 'B', 'Z', 'R', 'A', 'G', 'M'])
     assert.deepEqual(emptyStream.append(10).toArray(), [10])
   })
+
+  it('should provide inits', function () {
+    assert.deepEqual(
+      numberStream.inits().map(s => s.toArray()).toArray(),
+      [[], [1], [1, 2], [1, 2, 3], [1, 2, 3, 4], [1, 2, 3, 4, 5]]
+    )
+
+    assert.deepEqual(
+      charStream.inits().map(s => s.toArray()).toArray(),
+      [[], ['C'], ['C', 'B'], ['C', 'B', 'Z'], ['C', 'B', 'Z', 'R'], ['C', 'B', 'Z', 'R', 'A'], ['C', 'B', 'Z', 'R', 'A', 'G']]
+    )
+
+    assert.deepEqual(
+      emptyStream.inits().map(s => s.toArray()).toArray(),
+      [[]]
+    )
+  })
 })
