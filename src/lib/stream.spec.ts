@@ -83,4 +83,10 @@ describe('Stream tests', function () {
     assert.deepEqual(charStream.init().toArray(), ['C', 'B', 'Z', 'R', 'A'])
     assert.deepEqual(emptyStream.init().toArray(), [])
   })
+
+  it('should provide tail elements', function () {
+    assert.deepEqual(numberStream.tail().toArray(), [2, 3, 4, 5])
+    assert.deepEqual(charStream.tail().toArray(), ['B', 'Z', 'R', 'A', 'G'])
+    assert.deepEqual(emptyStream.tail().toArray(), [])
+  })
 })

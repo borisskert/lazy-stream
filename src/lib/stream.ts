@@ -8,6 +8,7 @@ export interface Stream<T> {
   head: () => T | undefined
   last: () => T | undefined
   init: () => Stream<T>
+  tail: () => Stream<T>
 }
 
 export function intRange (
@@ -133,6 +134,28 @@ class IterableStream<T> implements Stream<T> {
         if (next.done === false) {
           yield value
         }
+      }
+    }
+
+    return new IterableStream(generator)
+  }
+
+  tail (): Stream<T> {
+    const iteratorFn = this.iteratorFn
+
+    function* generator (): Iterator<T> {
+      const iterator = iteratorFn()
+      let next = iterator.next()
+
+      if (next !== undefined && next.done === false) {
+        next = iterator.next()
+      }
+
+      while (next !== undefined && next.done === false) {
+        const value = next.value
+
+        next = iterator.next()
+        yield value
       }
     }
 
