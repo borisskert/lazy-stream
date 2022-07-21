@@ -1,6 +1,22 @@
 import { assert } from 'chai'
 import { fromArray, intRange, Stream } from './stream'
 
+function descendingNumbers (a: number, b: number): number {
+  return b - a
+}
+
+function ascendingStrings (a: string, b: string): number {
+  if (a < b) {
+    return -1
+  }
+
+  if (a > b) {
+    return 1
+  }
+
+  return 0
+}
+
 describe('Stream tests', function () {
   let numberStream: Stream<number>
   let charStream: Stream<string>
@@ -36,5 +52,10 @@ describe('Stream tests', function () {
       charStream.flatMap((c) => [c, c]).toArray(),
       ['C', 'C', 'B', 'B', 'Z', 'Z', 'R', 'R', 'A', 'A', 'G', 'G']
     )
+  })
+
+  it('should sort elements', function () {
+    assert.deepEqual(numberStream.sorted(descendingNumbers).toArray(), [5, 4, 3, 2, 1])
+    assert.deepEqual(charStream.sorted((a, b) => ascendingStrings(a, b) * -1).toArray(), ['Z', 'R', 'G', 'C', 'B', 'A'])
   })
 })

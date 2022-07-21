@@ -3,6 +3,7 @@ export interface Stream<T> {
   filter: (predicate: (value: T, index: number) => boolean) => Stream<T>
   map: <U>(mapperFn: (value: T, index: number) => U) => Stream<U>
   flatMap: <U>(mapperFn: (value: T, index: number) => U[]) => Stream<U>
+  sorted: (compareFn?: (a: T, b: T) => number) => Stream<T>
 }
 
 export function intRange (
@@ -73,6 +74,10 @@ class IterableStream<T> implements Stream<T> {
 
       next = iterator.next()
     }
+  }
+
+  sorted (compareFn: ((a: T, b: T) => number) | undefined): Stream<T> {
+    return new Sorting(compareFn, this).toStream()
   }
 }
 
@@ -155,5 +160,23 @@ class Flattening<T> {
 
   public toStream (): Stream<T> {
     return new IterableStream(() => this.flatten())
+  }
+}
+
+class Sorting<T> {
+  constructor (
+    private readonly compareFn: ((a: T, b: T) => number) | undefined,
+    private readonly stream: Stream<T>,
+  ) {
+  }
+
+  private sorted (): T[] {
+    const items: T[] = this.stream.toArray()
+    return items.sort(this.compareFn)
+  }
+
+  public toStream (): Stream<T> {
+    const sortedItems = this.sorted()
+    return fromArray(sortedItems)
   }
 }
