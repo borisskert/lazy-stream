@@ -1,0 +1,11 @@
+{
+  "name": "lazy-stream",
+  "version": "0.1.0",
+  "description": "Lazy stream API for TypeScript/JavaScript",
+  "main": "",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "author": "borisskert",
+  "license": "MIT"
+}
