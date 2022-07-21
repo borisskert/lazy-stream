@@ -13,7 +13,7 @@ export interface Stream<T> {
   append: (item: T) => Stream<T>
   inits: () => Stream<Stream<T>>
   tails: () => Stream<Stream<T>>
-  reduce: (reducerfn: (previousValue: T, currentValue: T, currentIndex: number) => T) => T | undefined
+  reduce: (reducerfn: (previousValue: T, currentValue: T, currentIndex: number) => T, initialValue?: T) => T | undefined
 }
 
 export function intRange (
@@ -266,10 +266,10 @@ class IterableStream<T> implements Stream<T> {
     return new IterableStream(generate)
   }
 
-  reduce (reducerfn: (previousValue: T, currentValue: T, currentIndex: number) => T): T | undefined {
+  reduce (reducerfn: (previousValue: T, currentValue: T, currentIndex: number) => T, initialValue?: T): T | undefined {
     const iterator = this.iteratorFn()
     let next = iterator.next()
-    let reduced: T | undefined
+    let reduced: T | undefined = initialValue
     let index: number = 0
 
     while (next !== undefined && next.done === false) {
