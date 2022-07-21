@@ -1,5 +1,6 @@
 export interface Stream<T> {
   toArray: () => T[]
+  filter: (predicate: (value: T, index: number) => boolean) => Stream<T>
 }
 
 export function intRange (
@@ -44,5 +45,52 @@ class IterableStream<T> implements Stream<T> {
     }
 
     return items
+  }
+
+  filter (predicate: (value: T, index: number) => boolean): Stream<T> {
+    return new Filtering(predicate, this).toStream()
+  }
+
+  * asIterator (): Iterator<T> {
+    const iterator = this.iteratorFn()
+    let next = iterator.next()
+
+    while (next !== undefined && next.done === false) {
+      const value = next.value
+
+      yield value
+
+      next = iterator.next()
+    }
+  }
+}
+
+class Filtering<T> {
+  constructor (
+    private readonly predicate: (value: T, index: number) => boolean,
+    private readonly stream: IterableStream<T>
+  ) {
+  }
+
+  private* asIterator (): Iterator<T> {
+    let index = 0
+
+    const iterator = this.stream.asIterator()
+    let next = iterator.next()
+
+    while (next !== undefined && next.done === false) {
+      const value = next.value
+
+      if (this.predicate(value, index)) {
+        yield value
+      }
+
+      index += 1
+      next = iterator.next()
+    }
+  }
+
+  public toStream (): Stream<T> {
+    return new IterableStream(() => this.asIterator())
   }
 }
