@@ -77,4 +77,10 @@ describe('Stream tests', function () {
     assert.deepEqual(charStream.last(), 'G')
     assert.isUndefined(emptyStream.last())
   })
+
+  it('should provide init elements', function () {
+    assert.deepEqual(numberStream.init().toArray(), [1, 2, 3, 4])
+    assert.deepEqual(charStream.init().toArray(), ['C', 'B', 'Z', 'R', 'A'])
+    assert.deepEqual(emptyStream.init().toArray(), [])
+  })
 })
