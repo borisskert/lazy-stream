@@ -182,4 +182,10 @@ describe('Stream tests', function () {
     assert.deepEqual(charStream.takeUntil((x) => x === 'A').toArray(), ['C', 'B', 'Z', 'R'])
     assert.deepEqual(emptyStream.takeUntil((x) => x <= 0).toArray(), [])
   })
+
+  it('should drop items', function () {
+    assert.deepEqual(numberStream.drop(3).toArray(), [4, 5])
+    assert.deepEqual(charStream.drop(4).toArray(), ['A', 'G'])
+    assert.deepEqual(emptyStream.drop(6).toArray(), [])
+  })
 })
