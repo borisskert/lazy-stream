@@ -200,4 +200,10 @@ describe('Stream tests', function () {
     assert.deepEqual(charStream.dropUntil((x) => x >= 'Z').toArray(), ['Z', 'R', 'A', 'G'])
     assert.deepEqual(emptyStream.dropUntil((x) => x > 0).toArray(), [])
   })
+
+  it('should partition by condition', function () {
+    assert.deepEqual(numberStream.partition((x) => x > 3).map(s => s.toArray()), [[4, 5], [1, 2, 3]])
+    assert.deepEqual(charStream.partition((x) => x < 'R').map(s => s.toArray()), [['C', 'B', 'A', 'G'], ['Z', 'R']])
+    assert.deepEqual(emptyStream.partition((x) => x > 3).map(s => s.toArray()), [[], []])
+  })
 })
