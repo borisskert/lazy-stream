@@ -164,4 +164,10 @@ describe('Stream tests', function () {
     assert.deepEqual(charStream.reduce((a, b) => [...a, b], ['ABC']), ['ABC', 'C', 'B', 'Z', 'R', 'A', 'G'])
     assert.deepEqual(emptyStream.reduce((a, b) => [...a, b], [15]), [15])
   })
+
+  it('should take items', function () {
+    assert.deepEqual(numberStream.take(3).toArray(), [1, 2, 3])
+    assert.deepEqual(charStream.take(4).toArray(), ['C', 'B', 'Z', 'R'])
+    assert.deepEqual(emptyStream.take(6).toArray(), [])
+  })
 })

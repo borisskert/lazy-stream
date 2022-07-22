@@ -14,6 +14,7 @@ export interface Stream<T> {
   inits: () => Stream<Stream<T>>
   tails: () => Stream<Stream<T>>
   reduce: <U>(reducerfn: (previousValue: U, currentValue: T, currentIndex: number) => U, initialValue?: U) => U | undefined
+  take: (n: number) => Stream<T>
 }
 
 export function intRange (
@@ -287,6 +288,28 @@ class IterableStream<T> implements Stream<T> {
     }
 
     return reduced
+  }
+
+  take (n: number): Stream<T> {
+    const iteratorFn = this.iteratorFn
+
+    function* generator (): Iterator<T> {
+      const iterator = iteratorFn()
+      let next = iterator.next()
+      let count: number = 0
+
+      while (next !== undefined && next.done === false) {
+        const value = next.value
+
+        next = iterator.next()
+        if (next.done === false && count < n) {
+          yield value
+          count += 1
+        }
+      }
+    }
+
+    return new IterableStream(generator)
   }
 }
 
