@@ -148,14 +148,20 @@ describe('Stream tests', function () {
   })
 
   it('should reduce items', function () {
-    assert.deepEqual(numberStream.reduce((a, b) => a + b), 15)
-    assert.deepEqual(charStream.reduce((a, b) => a + b), 'CBZRAG')
-    assert.isUndefined(emptyStream.reduce((a, b) => a + b))
+    assert.deepEqual(numberStream.reduce<number>((a, b) => a + b), 15)
+    assert.deepEqual(charStream.reduce<string>((a, b) => a + b), 'CBZRAG')
+    assert.isUndefined(emptyStream.reduce<number>((a, b) => a + b))
   })
 
   it('should reduce items with starting value', function () {
     assert.deepEqual(numberStream.reduce((a, b) => a + b, 15), 30)
     assert.deepEqual(charStream.reduce((a, b) => a + b, 'ABC'), 'ABCCBZRAG')
     assert.deepEqual(emptyStream.reduce((a, b) => a + b, 15), 15)
+  })
+
+  it('should reduce items with starting value of another type', function () {
+    assert.deepEqual(numberStream.reduce(({ result: a }, b) => ({ result: a + b }), { result: 15 }), { result: 30 })
+    assert.deepEqual(charStream.reduce((a, b) => [...a, b], ['ABC']), ['ABC', 'C', 'B', 'Z', 'R', 'A', 'G'])
+    assert.deepEqual(emptyStream.reduce((a, b) => [...a, b], [15]), [15])
   })
 })
