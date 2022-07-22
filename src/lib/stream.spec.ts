@@ -188,4 +188,10 @@ describe('Stream tests', function () {
     assert.deepEqual(charStream.drop(4).toArray(), ['A', 'G'])
     assert.deepEqual(emptyStream.drop(6).toArray(), [])
   })
+
+  it('should drop items while condition', function () {
+    assert.deepEqual(numberStream.dropWhile((x) => x < 3).toArray(), [3, 4, 5])
+    assert.deepEqual(charStream.dropWhile((x) => x < 'Z').toArray(), ['Z', 'R', 'A', 'G'])
+    assert.deepEqual(emptyStream.dropWhile((x) => x > 0).toArray(), [])
+  })
 })
