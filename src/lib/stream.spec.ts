@@ -194,4 +194,10 @@ describe('Stream tests', function () {
     assert.deepEqual(charStream.dropWhile((x) => x < 'Z').toArray(), ['Z', 'R', 'A', 'G'])
     assert.deepEqual(emptyStream.dropWhile((x) => x > 0).toArray(), [])
   })
+
+  it('should drop items until condition', function () {
+    assert.deepEqual(numberStream.dropUntil((x) => x > 3).toArray(), [4, 5])
+    assert.deepEqual(charStream.dropUntil((x) => x >= 'Z').toArray(), ['Z', 'R', 'A', 'G'])
+    assert.deepEqual(emptyStream.dropUntil((x) => x > 0).toArray(), [])
+  })
 })

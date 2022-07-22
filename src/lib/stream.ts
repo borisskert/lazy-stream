@@ -19,6 +19,7 @@ export interface Stream<T> {
   takeUntil: (predicate: (x: T) => boolean) => Stream<T>
   drop: (n: number) => Stream<T>
   dropWhile: (predicate: (x: T) => boolean) => Stream<T>
+  dropUntil: (predicate: (x: T) => boolean) => Stream<T>
 }
 
 export function intRange (
@@ -395,6 +396,32 @@ class IterableStream<T> implements Stream<T> {
         const value = next.value
 
         if (!take && !predicate(value)) {
+          take = true
+        }
+
+        if (take) {
+          yield value
+        }
+
+        next = iterator.next()
+      }
+    }
+
+    return new IterableStream(generator)
+  }
+
+  dropUntil (predicate: (x: T) => boolean): Stream<T> {
+    const iteratorFn = this.iteratorFn
+
+    function* generator (): Iterator<T> {
+      const iterator = iteratorFn()
+      let next = iterator.next()
+      let take: boolean = false
+
+      while (next !== undefined && next.done === false) {
+        const value = next.value
+
+        if (!take && predicate(value)) {
           take = true
         }
 
