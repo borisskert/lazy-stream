@@ -170,4 +170,10 @@ describe('Stream tests', function () {
     assert.deepEqual(charStream.take(4).toArray(), ['C', 'B', 'Z', 'R'])
     assert.deepEqual(emptyStream.take(6).toArray(), [])
   })
+
+  it('should take items while condition', function () {
+    assert.deepEqual(numberStream.takeWhile((x) => x < 3).toArray(), [1, 2])
+    assert.deepEqual(charStream.takeWhile((x) => x < 'Z').toArray(), ['C', 'B'])
+    assert.deepEqual(emptyStream.takeWhile((x) => x > 0).toArray(), [])
+  })
 })
