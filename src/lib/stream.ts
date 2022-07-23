@@ -29,6 +29,7 @@ export interface Stream<T> {
   intersperse: (separator: T) => Stream<T>
   cycle: () => Stream<T>
   at: (index: number) => T | undefined
+  reverse: () => Stream<T>
 }
 
 export function intRange (
@@ -631,6 +632,22 @@ class IterableStream<T> implements Stream<T> {
     }
 
     return undefined
+  }
+
+  reverse (): Stream<T> {
+    const iterator = this.iteratorFn()
+    let next = iterator.next()
+    const items: T[] = []
+
+    while (next !== undefined && next.done === false) {
+      const value = next.value
+
+      items.push(value)
+
+      next = iterator.next()
+    }
+
+    return fromArray(items.reverse())
   }
 }
 

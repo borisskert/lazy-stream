@@ -291,4 +291,10 @@ describe('Stream tests', function () {
     assert.deepEqual(charStream.at(2), 'Z')
     assert.isUndefined(emptyStream.at(0))
   })
+
+  it('should reverse items', function () {
+    assert.deepEqual(numberStream.reverse().toArray(), [5, 4, 3, 2, 1])
+    assert.deepEqual(charStream.reverse().toArray(), ['G', 'A', 'R', 'Z', 'B', 'C'])
+    assert.deepEqual(emptyStream.reverse().toArray(), [])
+  })
 })
