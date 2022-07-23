@@ -14,7 +14,7 @@ export interface Stream<T> {
   append: (item: T) => Stream<T>
   inits: () => Stream<Stream<T>>
   tails: () => Stream<Stream<T>>
-  reduce: <U>(reducerfn: (previousValue: U, currentValue: T, currentIndex: number) => U, initialValue?: U) => U | undefined
+  reduce: <U>(reducerfn: (previousValue: U, currentValue: T, currentIndex: number) => U, initialValue?: U) => U
   take: (n: number) => Stream<T>
   takeWhile: (predicate: (x: T) => boolean) => Stream<T>
   takeUntil: (predicate: (x: T) => boolean) => Stream<T>
@@ -24,6 +24,7 @@ export interface Stream<T> {
   partition: (predicate: (x: T) => boolean) => Array<Stream<T>>
   distinct: (hashcode?: (x: T) => string | number | boolean) => Stream<T>
   group: (equalFn?: (a: T, b: T) => boolean) => Stream<Stream<T>>
+  replicate: (n: number) => Stream<T>
 }
 
 export function intRange (
@@ -276,7 +277,7 @@ class IterableStream<T> implements Stream<T> {
     return new IterableStream(generate)
   }
 
-  reduce<U> (reducerfn: (previousValue: U, currentValue: T, currentIndex: number) => U, initialValue?: U): U | undefined {
+  reduce<U> (reducerfn: (previousValue: U, currentValue: T, currentIndex: number) => U, initialValue?: U): U {
     const iterator = this.iteratorFn()
     let next = iterator.next()
     let reduced: U | undefined = initialValue
@@ -296,7 +297,8 @@ class IterableStream<T> implements Stream<T> {
       index += 1
     }
 
-    return reduced
+    // eslint-disable-next-line @typescript-eslint/no-non-null-assertion
+    return reduced!
   }
 
   take (n: number): Stream<T> {
@@ -523,6 +525,27 @@ class IterableStream<T> implements Stream<T> {
     }
 
     return items
+  }
+
+  replicate (n: number): Stream<T> {
+    const iteratorFn = this.iteratorFn
+
+    function* generator (): Iterator<T> {
+      for (let counter: number = 0; counter < n; counter += 1) {
+        const iterator = iteratorFn()
+        let next = iterator.next()
+
+        while (next !== undefined && next.done === false) {
+          const value = next.value
+
+          yield value
+
+          next = iterator.next()
+        }
+      }
+    }
+
+    return new IterableStream(generator)
   }
 }
 

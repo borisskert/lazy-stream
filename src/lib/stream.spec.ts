@@ -261,4 +261,10 @@ describe('Stream tests', function () {
         .toArray(),
       [[{ x: 'a' }, { x: 'a' }], [{ x: 'b' }], [{ x: 'a' }], [{ x: 'c' }, { x: 'c' }, { x: 'c' }], [{ x: 'b' }]])
   })
+
+  it('should replicate items', function () {
+    assert.deepEqual(numberStream.replicate(3).toArray(), [1, 2, 3, 4, 5, 1, 2, 3, 4, 5, 1, 2, 3, 4, 5])
+    assert.deepEqual(charStream.replicate(4).toArray(), ['C', 'B', 'Z', 'R', 'A', 'G', 'C', 'B', 'Z', 'R', 'A', 'G', 'C', 'B', 'Z', 'R', 'A', 'G', 'C', 'B', 'Z', 'R', 'A', 'G'])
+    assert.deepEqual(emptyStream.replicate(100).toArray(), [])
+  })
 })
