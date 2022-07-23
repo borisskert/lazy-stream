@@ -244,4 +244,13 @@ describe('Stream tests', function () {
       [[1], [2, 2], [3, 3, 3], [4, 4, 4, 4]]
     )
   })
+
+  it('should group complex items', function () {
+    assert.deepEqual(
+      fromArray([{ x: 'a' }, { x: 'a' }, { x: 'b' }, { x: 'a' }, { x: 'c' }, { x: 'c' }, { x: 'c' }, { x: 'b' }])
+        .group(({ x: a }, { x: b }) => a === b)
+        .map(s => s.toArray())
+        .toArray(),
+      [[{ x: 'a' }, { x: 'a' }], [{ x: 'b' }], [{ x: 'a' }], [{ x: 'c' }, { x: 'c' }, { x: 'c' }], [{ x: 'b' }]])
+  })
 })

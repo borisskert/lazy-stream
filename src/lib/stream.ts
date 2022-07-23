@@ -22,7 +22,7 @@ export interface Stream<T> {
   dropUntil: (predicate: (x: T) => boolean) => Stream<T>
   partition: (predicate: (x: T) => boolean) => Array<Stream<T>>
   distinct: (hashcode?: (x: T) => string | number | boolean) => Stream<T>
-  group: () => Stream<Stream<T>>
+  group: (equalFn?: (a: T, b: T) => boolean) => Stream<Stream<T>>
 }
 
 export function intRange (
@@ -472,7 +472,7 @@ class IterableStream<T> implements Stream<T> {
     }, this).toStream()
   }
 
-  group (): Stream<Stream<T>> {
+  group (equalFn: (a: T, b: T) => boolean = (a, b) => a === b): Stream<Stream<T>> {
     const iteratorFn = this.iteratorFn
 
     function* generate (): Iterator<Stream<T>> {
@@ -489,7 +489,8 @@ class IterableStream<T> implements Stream<T> {
               current = next.value
               old = current
               yield current
-            } else if (old === current) {
+              // eslint-disable-next-line @typescript-eslint/no-non-null-assertion
+            } else if (equalFn(old!, current!)) {
               // eslint-disable-next-line @typescript-eslint/no-non-null-assertion
               yield current!
             } else {
