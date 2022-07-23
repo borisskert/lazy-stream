@@ -206,4 +206,10 @@ describe('Stream tests', function () {
     assert.deepEqual(charStream.partition((x) => x < 'R').map(s => s.toArray()), [['C', 'B', 'A', 'G'], ['Z', 'R']])
     assert.deepEqual(emptyStream.partition((x) => x > 3).map(s => s.toArray()), [[], []])
   })
+
+  it('should provide distinct items', function () {
+    assert.deepEqual(fromArray([1, 4, 5, 3, 2, 4, 3, 2, 1, 5, 3, 4, 5, 1]).distinct().toArray(), [1, 4, 5, 3, 2])
+    assert.deepEqual(fromArray(['CD', 'AB', 'CD', 'BC', 'AB', 'ABC', 'CD']).distinct().toArray(), ['CD', 'AB', 'BC', 'ABC'])
+    assert.deepEqual(emptyStream.distinct().toArray(), [])
+  })
 })

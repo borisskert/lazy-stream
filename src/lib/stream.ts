@@ -21,6 +21,7 @@ export interface Stream<T> {
   dropWhile: (predicate: (x: T) => boolean) => Stream<T>
   dropUntil: (predicate: (x: T) => boolean) => Stream<T>
   partition: (predicate: (x: T) => boolean) => Array<Stream<T>>
+  distinct: () => Stream<T>
 }
 
 export function intRange (
@@ -442,6 +443,19 @@ class IterableStream<T> implements Stream<T> {
     const declined = new Filtering((x) => !(predicate(x)), this).toStream()
 
     return [accepted, declined]
+  }
+
+  distinct (): Stream<T> {
+    const distinctItems = new Set()
+
+    return new Filtering((x: T) => {
+      if (!distinctItems.has(x)) {
+        distinctItems.add(x)
+        return true
+      }
+
+      return false
+    }, this).toStream()
   }
 }
 
