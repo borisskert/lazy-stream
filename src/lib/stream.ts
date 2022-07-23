@@ -28,6 +28,7 @@ export interface Stream<T> {
   size: () => number
   intersperse: (separator: T) => Stream<T>
   cycle: () => Stream<T>
+  at: (index: number) => T | undefined
 }
 
 export function intRange (
@@ -611,6 +612,25 @@ class IterableStream<T> implements Stream<T> {
     }
 
     return new IterableStream(generator)
+  }
+
+  at (index: number): T | undefined {
+    const iterator = this.iteratorFn()
+    let next = iterator.next()
+    let count: number = 0
+
+    while (next !== undefined && next.done === false) {
+      const value = next.value
+
+      if (count === index) {
+        return value
+      }
+
+      count += 1
+      next = iterator.next()
+    }
+
+    return undefined
   }
 }
 

@@ -285,4 +285,10 @@ describe('Stream tests', function () {
     assert.deepEqual(charStream.cycle().take(27).toArray(), ['C', 'B', 'Z', 'R', 'A', 'G', 'C', 'B', 'Z', 'R', 'A', 'G', 'C', 'B', 'Z', 'R', 'A', 'G', 'C', 'B', 'Z', 'R', 'A', 'G', 'C', 'B', 'Z'])
     assert.deepEqual(emptyStream.cycle().take(1).toArray(), [])
   })
+
+  it('should provide item at index', function () {
+    assert.deepEqual(numberStream.at(4), 5)
+    assert.deepEqual(charStream.at(2), 'Z')
+    assert.isUndefined(emptyStream.at(0))
+  })
 })
