@@ -22,6 +22,7 @@ export interface Stream<T> {
   dropUntil: (predicate: (x: T) => boolean) => Stream<T>
   partition: (predicate: (x: T) => boolean) => Array<Stream<T>>
   distinct: (hashcode?: (x: T) => string | number | boolean) => Stream<T>
+  group: () => Stream<Stream<T>>
 }
 
 export function intRange (
@@ -469,6 +470,44 @@ class IterableStream<T> implements Stream<T> {
 
       return false
     }, this).toStream()
+  }
+
+  group (): Stream<Stream<T>> {
+    const iteratorFn = this.iteratorFn
+
+    function* generate (): Iterator<Stream<T>> {
+      const iterator = iteratorFn()
+      let next = iterator.next()
+      let old: T | undefined
+      let current: T | undefined
+
+      while (next !== undefined && next.done === false) {
+        // @ts-expect-error
+        function* generateGroup (): Iterator<T> {
+          while (next !== undefined && next.done === false) {
+            if (current === undefined && old === undefined) {
+              current = next.value
+              old = current
+              yield current
+            } else if (old === current) {
+              // eslint-disable-next-line @typescript-eslint/no-non-null-assertion
+              yield current!
+            } else {
+              current = undefined
+              old = undefined
+              break
+            }
+
+            next = iterator.next()
+            current = next.value
+          }
+        }
+
+        yield new IterableStream(generateGroup)
+      }
+    }
+
+    return new IterableStream(generate)
   }
 }
 

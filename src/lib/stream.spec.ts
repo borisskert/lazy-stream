@@ -220,4 +220,28 @@ describe('Stream tests', function () {
       ({ x }) => x
     ).toArray(), [{ x: 'a' }, { x: 'b' }, { x: 'c' }])
   })
+
+  it('should group elements', function () {
+    assert.deepEqual(
+      numberStream.group().map(s => s.toArray()).toArray(),
+      [[1], [2], [3], [4], [5]]
+    )
+
+    assert.deepEqual(
+      charStream.group().map(s => s.toArray()).toArray(),
+      [['C'], ['B'], ['Z'], ['R'], ['A'], ['G']]
+    )
+
+    assert.deepEqual(
+      emptyStream.group().map(s => s.toArray()).toArray(),
+      []
+    )
+
+    assert.deepEqual(
+      fromArray(
+        [1, 2, 2, 3, 3, 3, 4, 4, 4, 4]
+      ).group().map(s => s.toArray()).toArray(),
+      [[1], [2, 2], [3, 3, 3], [4, 4, 4, 4]]
+    )
+  })
 })
