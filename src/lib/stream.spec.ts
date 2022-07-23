@@ -273,4 +273,10 @@ describe('Stream tests', function () {
     assert.deepEqual(charStream.size(), 6)
     assert.deepEqual(emptyStream.size(), 0)
   })
+
+  it('should intersperse separator in items', function () {
+    assert.deepEqual(numberStream.intersperse(0).toArray(), [1, 0, 2, 0, 3, 0, 4, 0, 5])
+    assert.deepEqual(charStream.intersperse('-').toArray(), ['C', '-', 'B', '-', 'Z', '-', 'R', '-', 'A', '-', 'G'])
+    assert.deepEqual(emptyStream.intersperse(0).toArray(), [])
+  })
 })
