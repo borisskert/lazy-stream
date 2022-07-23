@@ -31,6 +31,14 @@ describe('Stream tests', function () {
   it('should provide items as array', function () {
     assert.deepEqual(numberStream.toArray(), [1, 2, 3, 4, 5])
     assert.deepEqual(charStream.toArray(), ['C', 'B', 'Z', 'R', 'A', 'G'])
+    assert.deepEqual(emptyStream.toArray(), [])
+  })
+
+  it('should provide items as Set', function () {
+    assert.deepEqual(numberStream.toSet(), new Set([1, 2, 3, 4, 5]))
+    assert.deepEqual(charStream.toSet(), new Set(['C', 'B', 'Z', 'R', 'A', 'G']))
+    assert.deepEqual(emptyStream.toSet(), new Set())
+    assert.deepEqual(fromArray([1, 4, 5, 3, 2, 4, 3, 2, 1, 5, 3, 4, 5, 1]).toSet(), new Set([1, 2, 3, 4, 5]))
   })
 
   it('should filter elements', function () {

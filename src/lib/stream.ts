@@ -1,5 +1,6 @@
 export interface Stream<T> {
   toArray: () => T[]
+  toSet: () => Set<T>
   filter: (predicate: (value: T, index: number) => boolean) => Stream<T>
   map: <U>(mapperFn: (value: T, index: number) => U) => Stream<U>
   flatMap: <U>(mapperFn: (value: T, index: number) => U[]) => Stream<U>
@@ -509,6 +510,19 @@ class IterableStream<T> implements Stream<T> {
     }
 
     return new IterableStream(generate)
+  }
+
+  toSet (): Set<T> {
+    const items: Set<T> = new Set<T>()
+    const iterator = this.iteratorFn()
+    let next = iterator.next()
+
+    while (next !== undefined && next.done === false) {
+      items.add(next.value)
+      next = iterator.next()
+    }
+
+    return items
   }
 }
 
