@@ -212,4 +212,12 @@ describe('Stream tests', function () {
     assert.deepEqual(fromArray(['CD', 'AB', 'CD', 'BC', 'AB', 'ABC', 'CD']).distinct().toArray(), ['CD', 'AB', 'BC', 'ABC'])
     assert.deepEqual(emptyStream.distinct().toArray(), [])
   })
+
+  it('should provide distinct object items', function () {
+    assert.deepEqual(fromArray([
+      { x: 'a' }, { x: 'b' }, { x: 'a' }, { x: 'c' }, { x: 'b' },
+    ]).distinct(
+      ({ x }) => x
+    ).toArray(), [{ x: 'a' }, { x: 'b' }, { x: 'c' }])
+  })
 })
