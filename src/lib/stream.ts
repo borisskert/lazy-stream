@@ -1,6 +1,8 @@
 export interface Stream<T> {
   toArray: () => T[]
   toSet: () => Set<T>
+  toMap: <K, V>(keyFn: (x: T) => K, valueFn: (x: T) => V) => Map<K, V>
+  toObject: <V> (keyFn: (x: T) => string, valueFn: (x: T) => V) => { [key: string]: V }
   filter: (predicate: (value: T, index: number) => boolean) => Stream<T>
   map: <U>(mapperFn: (value: T, index: number) => U) => Stream<U>
   flatMap: <U>(mapperFn: (value: T, index: number) => U[]) => Stream<U>
@@ -30,7 +32,6 @@ export interface Stream<T> {
   cycle: () => Stream<T>
   at: (index: number) => T | undefined
   reverse: () => Stream<T>
-  toMap: <K, V>(keyFn: (x: T) => K, valueFn: (x: T) => V) => Map<K, V>
 }
 
 export function intRange (
@@ -666,6 +667,23 @@ class IterableStream<T> implements Stream<T> {
     }
 
     return map
+  }
+
+  toObject<V> (keyFn: (x: T) => string, valueFn: (x: T) => V): { [key: string]: V } {
+    const iterator = this.iteratorFn()
+    let next = iterator.next()
+
+    const object: { [key: string]: V } = {}
+
+    while (next !== undefined && next.done === false) {
+      const value = next.value
+
+      object[keyFn(value)] = valueFn(value)
+
+      next = iterator.next()
+    }
+
+    return object
   }
 }
 

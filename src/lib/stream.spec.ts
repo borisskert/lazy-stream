@@ -56,6 +56,28 @@ describe('Stream tests', function () {
       new Map([['A', 'a'], ['B', 'b'], ['C', 'c']]))
   })
 
+  it('should provide items as object', function () {
+    assert.deepEqual(numberStream.toObject(x => String(x), x => x), { 1: 1, 2: 2, 3: 3, 4: 4, 5: 5 })
+    assert.deepEqual(charStream.toObject(x => x, x => x + x), {
+      C: 'CC',
+      B: 'BB',
+      Z: 'ZZ',
+      R: 'RR',
+      A: 'AA',
+      G: 'GG',
+    })
+    assert.deepEqual(emptyStream.toObject(x => String(x), x => x), {})
+    assert.deepEqual(
+      fromArray(
+        [
+          { key: 'A', value: 'a' },
+          { key: 'B', value: 'b' },
+          { key: 'C', value: 'c' },
+        ])
+        .toObject(({ key }) => key, ({ value }) => value),
+      { A: 'a', B: 'b', C: 'c' })
+  })
+
   it('should filter elements', function () {
     assert.deepEqual(numberStream.filter((x: number) => x % 2 === 0).toArray(), [2, 4])
     assert.deepEqual(charStream.filter((c: string) => c <= 'C').toArray(), ['C', 'B', 'A'])
