@@ -279,4 +279,10 @@ describe('Stream tests', function () {
     assert.deepEqual(charStream.intersperse('-').toArray(), ['C', '-', 'B', '-', 'Z', '-', 'R', '-', 'A', '-', 'G'])
     assert.deepEqual(emptyStream.intersperse(0).toArray(), [])
   })
+
+  it('should cycle items', function () {
+    assert.deepEqual(numberStream.cycle().take(13).toArray(), [1, 2, 3, 4, 5, 1, 2, 3, 4, 5, 1, 2, 3])
+    assert.deepEqual(charStream.cycle().take(27).toArray(), ['C', 'B', 'Z', 'R', 'A', 'G', 'C', 'B', 'Z', 'R', 'A', 'G', 'C', 'B', 'Z', 'R', 'A', 'G', 'C', 'B', 'Z', 'R', 'A', 'G', 'C', 'B', 'Z'])
+    assert.deepEqual(emptyStream.cycle().take(1).toArray(), [])
+  })
 })

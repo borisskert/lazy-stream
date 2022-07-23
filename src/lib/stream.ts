@@ -27,6 +27,7 @@ export interface Stream<T> {
   replicate: (n: number) => Stream<T>
   size: () => number
   intersperse: (separator: T) => Stream<T>
+  cycle: () => Stream<T>
 }
 
 export function intRange (
@@ -331,6 +332,8 @@ class IterableStream<T> implements Stream<T> {
         if (next.done === false && count < n) {
           yield value
           count += 1
+        } else {
+          break
         }
       }
     }
@@ -579,6 +582,30 @@ class IterableStream<T> implements Stream<T> {
 
         if (next.done === false) {
           yield separator
+        }
+      }
+    }
+
+    return new IterableStream(generator)
+  }
+
+  cycle (): Stream<T> {
+    const iteratorFn = this.iteratorFn
+
+    function* generator (): Iterator<T> {
+      let iterator = iteratorFn()
+      let next = iterator.next()
+
+      while (next !== undefined && next.done === false) {
+        const value = next.value
+
+        yield value
+
+        next = iterator.next()
+
+        if (next.done === true) {
+          iterator = iteratorFn()
+          next = iterator.next()
         }
       }
     }
