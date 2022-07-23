@@ -30,6 +30,7 @@ export interface Stream<T> {
   cycle: () => Stream<T>
   at: (index: number) => T | undefined
   reverse: () => Stream<T>
+  toMap: <K, V>(keyFn: (x: T) => K, valueFn: (x: T) => V) => Map<K, V>
 }
 
 export function intRange (
@@ -648,6 +649,23 @@ class IterableStream<T> implements Stream<T> {
     }
 
     return fromArray(items.reverse())
+  }
+
+  toMap<K, V> (keyFn: (x: T) => K, valueFn: (x: T) => V): Map<K, V> {
+    const iterator = this.iteratorFn()
+    let next = iterator.next()
+
+    const map: Map<K, V> = new Map<K, V>()
+
+    while (next !== undefined && next.done === false) {
+      const value = next.value
+
+      map.set(keyFn(value), valueFn(value))
+
+      next = iterator.next()
+    }
+
+    return map
   }
 }
 
