@@ -25,6 +25,7 @@ export interface Stream<T> {
   distinct: (hashcode?: (x: T) => string | number | boolean) => Stream<T>
   group: (equalFn?: (a: T, b: T) => boolean) => Stream<Stream<T>>
   replicate: (n: number) => Stream<T>
+  size: () => number
 }
 
 export function intRange (
@@ -60,6 +61,19 @@ export function empty<T> (): Stream<T> {
 
 class IterableStream<T> implements Stream<T> {
   constructor (private readonly iteratorFn: () => Iterator<T>) {
+  }
+
+  size (): number {
+    let size = 0
+    const iterator = this.iteratorFn()
+    let next = iterator.next()
+
+    while (next !== undefined && next.done === false) {
+      size += 1
+      next = iterator.next()
+    }
+
+    return size
   }
 
   toArray (): T[] {

@@ -267,4 +267,10 @@ describe('Stream tests', function () {
     assert.deepEqual(charStream.replicate(4).toArray(), ['C', 'B', 'Z', 'R', 'A', 'G', 'C', 'B', 'Z', 'R', 'A', 'G', 'C', 'B', 'Z', 'R', 'A', 'G', 'C', 'B', 'Z', 'R', 'A', 'G'])
     assert.deepEqual(emptyStream.replicate(100).toArray(), [])
   })
+
+  it('should provide size', function () {
+    assert.deepEqual(numberStream.size(), 5)
+    assert.deepEqual(charStream.size(), 6)
+    assert.deepEqual(emptyStream.size(), 0)
+  })
 })
