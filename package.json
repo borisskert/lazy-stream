@@ -1,5 +1,5 @@
 {
-  "name": "lazy-stream",
+  "name": "@borisskert/lazy-stream",
   "version": "0.1.0",
   "description": "Lazy stream API for TypeScript/JavaScript",
   "repository": "https://github.com/borisskert/lazy-stream",
